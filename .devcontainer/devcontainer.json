@@ -1,4 +1,8 @@
 {
+  "image": "mcr.microsoft.com/devcontainers/python:3",
+  "features": {
+    "ghcr.io/warrenbuckley/codespace-features/sqlite:latest": {}
+  },
   "customizations": {
     "codespaces": {
       "openFiles": [
@@ -6,19 +10,27 @@
       ]
     },
     "vscode": {
-      // Set *default* container specific settings.json values on container create.
       "settings": {
         "terminal.integrated.shell.linux": "/bin/bash"
       },
-      // Add the IDs of extensions you want installed when the container is created.
       "extensions": [
+        "github.copilot",
+        "ms-python.python",
+        "ms-python.vscode-pylance",
+        "rohinivsenthil.postcode",
         "linkedinlearning.linkedinlearning-vscode-theme"
       ]
     }
   },
-  // Update welcome text and set terminal prompt to '$ '
-  "onCreateCommand": "echo PS1='\"$ \"' >> ~/.bashrc",
-  // Pull all branches
-  "postAttachCommand": "git pull --all"
+  "waitFor": "onCreateCommand",
+  "onCreateCommand": {
+    "prompt": "echo PS1='\"$ \"' >> ~/.bashrc"
+  },
+  "postAttachCommand": {
+    "src": "git pull --all",
+    "deps": "pip install -r requirements.txt"
+  },
+  "forwardPorts": [
+    8000
+  ]
 }
-// DevContainer Reference: https://code.visualstudio.com/docs/remote/devcontainerjson-reference
