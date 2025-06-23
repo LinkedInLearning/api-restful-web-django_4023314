@@ -17,7 +17,7 @@
         "github.copilot",
         "ms-python.python",
         "ms-python.vscode-pylance",
-        "rohinivsenthil.postcode",
+        "rapidapi.vscode-rapidapi-client",
         "linkedinlearning.linkedinlearning-vscode-theme"
       ]
     }
