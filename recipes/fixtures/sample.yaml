@@ -1,0 +1,15 @@
+- model: recipes.Category
+  pk: 1
+  fields:
+    name: Snacking
+    order: 10
+- model: recipes.Category
+  pk: 2
+  fields:
+    name: Plats
+    order: 20
+- model: recipes.Category
+  pk: 3
+  fields:
+    name: Dessert
+    order: 30
