@@ -1,7 +1,7 @@
 from django.shortcuts import render
 
 from .models import Category, Recipe
-from .serializers import CategorySerializer, RecipeSerializer
+from .serializers import CategorySerializer, RecipeListSerializer, RecipeDetailSerializer
 from rest_framework import viewsets
 
 class CategoryViewSet(viewsets.ModelViewSet):
@@ -17,4 +17,6 @@ class RecipeViewSet(viewsets.ModelViewSet):
     A viewset for viewing and editing recipe instances.
     """
     queryset = Recipe.objects.all().order_by('-published')
-    serializer_class = RecipeSerializer
+    
+    def get_serializer_class(self):
+        return RecipeListSerializer if self.action == 'list' else RecipeDetailSerializer
