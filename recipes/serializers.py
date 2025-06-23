@@ -17,8 +17,18 @@ class RecipeListSerializer(serializers.ModelSerializer):
 class RecipeDetailSerializer(serializers.ModelSerializer):
     class Meta:
         model = Recipe
-        exclude = ['password']
+        fields = '__all__'
 
+    likes = serializers.IntegerField(read_only=True)
+    image = serializers.CharField()
+    categoryName = serializers.CharField(source='category.name', read_only=True)
+    published = serializers.DateTimeField(format="%Y-%m-%d %H:%M", read_only=True)
+    password = serializers.CharField(write_only=True, required=False)
+    veganTitle = serializers.SerializerMethodField()
+
+    def get_veganTitle(self, obj):
+        return "Vegan" if obj.vegan else "Non-Vegan"
+    
 
 class IngredientSerializer(serializers.ModelSerializer):
     class Meta:
