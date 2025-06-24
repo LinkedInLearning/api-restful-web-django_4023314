@@ -2,7 +2,8 @@ from django.db import connection
 from django.shortcuts import render
 
 from rest_framework.decorators import action
-from rest_framework import viewsets, response, generics
+from rest_framework import viewsets, response, generics, filters
+from django_filters.rest_framework import DjangoFilterBackend
 
 from .models import Category, Recipe
 from .serializers import CategorySerializer, CategoryInfoSerializer, IngredientSerializer, RecipeListSerializer, RecipeDetailSerializer
@@ -23,7 +24,20 @@ class RecipeViewSet(viewsets.ModelViewSet):
     """
     queryset = Recipe.objects.all().order_by('-published')
     template_name = 'recipes.html'
+    filter_backends = [DjangoFilterBackend, filters.SearchFilter]
+    filterset_fields = {
+        'vegan': ['exact'],
+        'likes': ['gte', 'lte'],
+        'published': ['gte', 'lte']
+    }    
+    search_fields = ['title', 'description', 'instructions', 'category__name']
     
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        if self.request.query_params.get('locked') is not None:
+            queryset = queryset.filter(password__isnull=False)
+        return queryset
+
     def get_serializer_class(self):
         return RecipeListSerializer if self.action == 'list' else RecipeDetailSerializer
 
