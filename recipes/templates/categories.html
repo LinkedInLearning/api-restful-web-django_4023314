@@ -1,6 +1,11 @@
 {% for category in details %}
 <li class="nav-item">
-  <a class="nav-link" aria-current="page" href="#">
+  <a class="nav-link" aria-current="page" href="#"
+     hx-trigger="click"
+     hx-get="{% url 'category-recipes' category.id %}"
+     hx-headers='{"Accept": "text/html-fragment"}'
+     hx-target="main>div"
+     hx-swap="innerHTML">
     {{ category.name }}
   </a>
 </li>
