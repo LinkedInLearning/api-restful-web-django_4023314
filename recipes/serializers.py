@@ -13,6 +13,7 @@ class RecipeListSerializer(serializers.HyperlinkedModelSerializer):
         model = Recipe
         exclude = ['password', 'instructions']
 
+    imageUrl = serializers.CharField(source='image.url', read_only=True)
 
 class RecipeDetailSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
