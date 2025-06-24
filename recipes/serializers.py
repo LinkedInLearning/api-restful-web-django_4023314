@@ -39,3 +39,14 @@ class IngredientSerializer(serializers.ModelSerializer):
     class Meta:
         model = Ingredient
         fields = ['name', 'optional']
+
+
+class CategoryInfoSerializer(serializers.Serializer):
+    def to_representation(self, instance):
+        return {
+            'category_id': instance[0],
+            'category_name': instance[1],
+            'recipes': instance[2],
+            'likes': instance[3]
+        }
+    
