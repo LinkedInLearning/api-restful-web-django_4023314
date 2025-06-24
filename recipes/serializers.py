@@ -8,13 +8,13 @@ class CategorySerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
-class RecipeListSerializer(serializers.ModelSerializer):
+class RecipeListSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Recipe
         exclude = ['password', 'instructions']
 
 
-class RecipeDetailSerializer(serializers.ModelSerializer):
+class RecipeDetailSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Recipe
         fields = '__all__'
@@ -25,10 +25,15 @@ class RecipeDetailSerializer(serializers.ModelSerializer):
     published = serializers.DateTimeField(format="%Y-%m-%d %H:%M", read_only=True)
     password = serializers.CharField(write_only=True, required=False)
     veganTitle = serializers.SerializerMethodField()
+    ingredients = serializers.SerializerMethodField()
 
     def get_veganTitle(self, obj):
         return "Vegan" if obj.vegan else "Non-Vegan"
     
+    def get_ingredients(self, obj):
+        ingredients = obj.ingredient_set.all()
+        return IngredientSerializer(ingredients, many=True).data
+
 
 class IngredientSerializer(serializers.ModelSerializer):
     class Meta:

@@ -1,8 +1,9 @@
 from django.shortcuts import render
+from rest_framework.decorators import action
 
 from .models import Category, Recipe
-from .serializers import CategorySerializer, RecipeListSerializer, RecipeDetailSerializer
-from rest_framework import viewsets
+from .serializers import CategorySerializer, IngredientSerializer, RecipeListSerializer, RecipeDetailSerializer
+from rest_framework import viewsets, response
 
 class CategoryViewSet(viewsets.ModelViewSet):
     """
@@ -20,3 +21,10 @@ class RecipeViewSet(viewsets.ModelViewSet):
     
     def get_serializer_class(self):
         return RecipeListSerializer if self.action == 'list' else RecipeDetailSerializer
+
+    @action(detail=True, methods=['get'])
+    def ingredients(self, request, pk=None):
+        ingredients = self.get_object().ingredient_set.all()
+        return response.Response(
+            IngredientSerializer(ingredients, many=True).data
+        )
