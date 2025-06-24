@@ -133,6 +133,9 @@ REST_FRAMEWORK = {
         "rest_framework.renderers.BrowsableAPIRenderer",
         "gourmand.renderers.TemplateHTMLFragmentRenderer",
     ),
+    # "DEFAULT_PAGINATION_CLASS": "rest_framework.pagination.PagePagination",
+    "DEFAULT_PAGINATION_CLASS": "rest_framework.pagination.LimitOffsetPagination",
+    "PAGE_SIZE": 10,
 }
 
 # Default primary key field type
