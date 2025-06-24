@@ -16,6 +16,8 @@ class CategoryViewSet(viewsets.ModelViewSet):
     queryset = Category.objects.all().order_by('order')
     serializer_class = CategorySerializer
     template_name = 'categories.html'
+    ordering_fields = ['order']
+    search_fields = ['name']
 
 
 class RecipeViewSet(viewsets.ModelViewSet):
@@ -24,13 +26,14 @@ class RecipeViewSet(viewsets.ModelViewSet):
     """
     queryset = Recipe.objects.all().order_by('-published')
     template_name = 'recipes.html'
-    filter_backends = [DjangoFilterBackend, filters.SearchFilter]
+    filter_backends = [DjangoFilterBackend, filters.SearchFilter, filters.OrderingFilter]
     filterset_fields = {
         'vegan': ['exact'],
         'likes': ['gte', 'lte'],
         'published': ['gte', 'lte']
     }    
     search_fields = ['title', 'description', 'instructions', 'category__name']
+    ordering_fields = ['title', 'published', 'likes']
     
     def get_queryset(self):
         queryset = super().get_queryset()
