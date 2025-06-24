@@ -20,12 +20,9 @@ from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
 from django.shortcuts import render
-from recipes.views import CategoryRecipesView
 
 urlpatterns = [
     path("admin/", admin.site.urls),
     path("v1/", include("recipes.urls")),
-    path('v1/categories/<int:category_pk>/recipes/', 
-         CategoryRecipesView.as_view(), name='category-recipes'),
     path('', lambda request: render(request, 'index.html'), name='index'),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

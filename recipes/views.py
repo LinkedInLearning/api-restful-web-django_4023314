@@ -5,8 +5,8 @@ from rest_framework.decorators import action
 from rest_framework import viewsets, response, generics, filters
 from django_filters.rest_framework import DjangoFilterBackend
 
-from .models import Category, Recipe
-from .serializers import CategorySerializer, CategoryInfoSerializer, IngredientSerializer, RecipeListSerializer, RecipeDetailSerializer
+from .models import Category, Recipe, Ingredient
+from .serializers import CategorySerializer, CategoryInfoSerializer, IngredientFullSerializer, IngredientUrlSerializer, RecipeListSerializer, RecipeDetailSerializer
 
 
 class CategoryViewSet(viewsets.ModelViewSet):
@@ -46,10 +46,18 @@ class RecipeViewSet(viewsets.ModelViewSet):
 
     @action(detail=True, methods=['get'])
     def ingredients(self, request, pk=None):
-        ingredients = self.get_object().ingredient_set.all()
         return response.Response(
-            IngredientSerializer(ingredients, many=True).data
+            IngredientUrlSerializer(
+                self.get_object().ingredient_set.all(), 
+                many=True, 
+                context={'request': request}
+            ).data
         )
+
+
+class IngredientView(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Ingredient.objects.all()
+    serializer_class = IngredientFullSerializer
 
 
 class CategoryRecipesView(generics.ListAPIView):

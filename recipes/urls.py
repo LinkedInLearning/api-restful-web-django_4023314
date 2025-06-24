@@ -1,10 +1,16 @@
 from rest_framework import routers
-
-from .views import CategoryViewSet, RecipeViewSet, CategoryInfoViewSet
+from django.urls import path, include
+from . import views
 
 router = routers.DefaultRouter()
-router.register(r'categories', CategoryViewSet)
-router.register(r'recipes'   , RecipeViewSet)
-router.register(r'info'      , CategoryInfoViewSet, basename='category-info')
+router.register(r'categories', views.CategoryViewSet)
+router.register(r'recipes'   , views.RecipeViewSet)
+router.register(r'info'      , views.CategoryInfoViewSet, basename='category-info')
 
-urlpatterns = router.urls
+urlpatterns = [
+  path('', include(router.urls)),
+  path('ingredients/<int:pk>/',
+       views.IngredientView.as_view(), name='ingredient-detail'),
+  path('categories/<int:category_pk>/recipes/',
+       views.CategoryRecipesView.as_view(), name='category-recipes'),
+]

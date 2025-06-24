@@ -15,6 +15,7 @@ class RecipeListSerializer(serializers.HyperlinkedModelSerializer):
 
     imageUrl = serializers.CharField(source='image.url', read_only=True)
 
+
 class RecipeDetailSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Recipe
@@ -40,6 +41,18 @@ class IngredientSerializer(serializers.ModelSerializer):
     class Meta:
         model = Ingredient
         fields = ['name', 'optional']
+
+
+class IngredientUrlSerializer(serializers.HyperlinkedModelSerializer):
+    class Meta:
+        model = Ingredient
+        fields = [ 'url', 'name', 'optional']
+
+
+class IngredientFullSerializer(serializers.HyperlinkedModelSerializer):
+    class Meta:
+        model = Ingredient
+        fields = '__all__'
 
 
 class CategoryInfoSerializer(serializers.Serializer):
