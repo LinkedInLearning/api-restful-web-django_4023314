@@ -1,0 +1,5 @@
+{% for recipe in details %}
+<div class="col">
+  {% include "recipe-card.html" with details=recipe %}
+</div>
+{% endfor %}

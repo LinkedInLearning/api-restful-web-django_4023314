@@ -1,0 +1,15 @@
+<div class="card shadow-sm">
+  <img src="{{ details.imageUrl }}" class="card-img-top" width="100%" alt="Photo de {{ details.title|escape }}"
+    focusable="false">
+  <div class="card-body">
+    <h3 class="card-title">{{ details.title }}</h3>
+    <p class="card-text">{{ details.description }}</p>
+    <div class="d-flex justify-content-between align-items-center">
+      <div class="btn-group">
+        <a href="#" class="btn btn-sm btn-outline-secondary">Voir</a>
+        <a href="#" class="btn btn-sm btn-outline-secondary">+1 j'aime</a>
+      </div>
+      <small class="text-body-secondary">{{ details.likes }} j'aime</small>
+    </div>
+  </div>
+</div>
