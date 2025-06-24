@@ -20,7 +20,7 @@ class RecipeDetailSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Recipe
         fields = '__all__'
-
+        
     likes = serializers.IntegerField(read_only=True)
     image = serializers.CharField()
     categoryName = serializers.CharField(source='category.name', read_only=True)
@@ -28,6 +28,11 @@ class RecipeDetailSerializer(serializers.HyperlinkedModelSerializer):
     password = serializers.CharField(write_only=True, required=False)
     veganTitle = serializers.SerializerMethodField()
     ingredients = serializers.SerializerMethodField()
+        
+    def validate_image(self, value):
+        if not value or not value.startswith('img/') or not value.endswith('.jpg'):
+            raise serializers.ValidationError("Image is required and must match 'img/....jpg'.")
+        return value
 
     def get_veganTitle(self, obj):
         return "Vegan" if obj.vegan else "Non-Vegan"
