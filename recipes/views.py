@@ -2,7 +2,7 @@ from django.db import connection
 from django.shortcuts import render
 
 from rest_framework.decorators import action
-from rest_framework import viewsets, response
+from rest_framework import viewsets, response, generics
 
 from .models import Category, Recipe
 from .serializers import CategorySerializer, CategoryInfoSerializer, IngredientSerializer, RecipeListSerializer, RecipeDetailSerializer
@@ -33,6 +33,16 @@ class RecipeViewSet(viewsets.ModelViewSet):
         return response.Response(
             IngredientSerializer(ingredients, many=True).data
         )
+
+
+class CategoryRecipesView(generics.ListAPIView):
+    serializer_class = RecipeListSerializer
+    template_name = 'recipes.html'
+
+    def get_queryset(self):
+        return Recipe.objects.filter(
+            category_id=self.kwargs.get('category_pk')
+        ).order_by('-published')
 
 
 class CategoryInfoViewSet(viewsets.ViewSet):
