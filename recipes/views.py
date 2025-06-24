@@ -44,8 +44,16 @@ class RecipeViewSet(viewsets.ModelViewSet):
     def get_serializer_class(self):
         return RecipeListSerializer if self.action == 'list' else RecipeDetailSerializer
 
-    @action(detail=True, methods=['get'])
+    @action(detail=True, methods=['get', 'post'])
     def ingredients(self, request, pk=None):
+        if request.method == 'POST':
+            recipe = self.get_object()
+            serializer = IngredientUrlSerializer(data=request.data, context={'request': request})
+            if not serializer.is_valid():
+                return response.Response(serializer.errors, status=400)
+            serializer.save(recipe=recipe)
+            return response.Response(serializer.data, status=201)
+            
         return response.Response(
             IngredientUrlSerializer(
                 self.get_object().ingredient_set.all(), 

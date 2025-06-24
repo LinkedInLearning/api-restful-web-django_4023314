@@ -1,5 +1,5 @@
 from django.db import models
-from django.core.validators import RegexValidator
+from django.core.validators import RegexValidator, MinLengthValidator
 
 class Category(models.Model):
     name = models.CharField(max_length=20)
@@ -35,7 +35,7 @@ class Recipe(models.Model):
 
 class Ingredient(models.Model):
     recipe = models.ForeignKey(Recipe, on_delete=models.CASCADE)
-    name = models.CharField(max_length=100)
+    name = models.CharField(max_length=100, validators=[MinLengthValidator(2)])
     optional = models.BooleanField(default=False)
 
     def __str__(self):
