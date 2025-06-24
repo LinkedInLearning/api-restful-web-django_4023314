@@ -1,4 +1,5 @@
-{% for recipe in details %}
+{# Pagination : details -> results #}
+{% for recipe in results %}
 <div class="col">
   {% include "recipe-card.html" with details=recipe %}
 </div>
