@@ -1,9 +1,12 @@
+from django.db import connection
 from django.shortcuts import render
+
 from rest_framework.decorators import action
+from rest_framework import viewsets, response
 
 from .models import Category, Recipe
 from .serializers import CategorySerializer, IngredientSerializer, RecipeListSerializer, RecipeDetailSerializer
-from rest_framework import viewsets, response
+
 
 class CategoryViewSet(viewsets.ModelViewSet):
     """
@@ -28,3 +31,18 @@ class RecipeViewSet(viewsets.ModelViewSet):
         return response.Response(
             IngredientSerializer(ingredients, many=True).data
         )
+
+
+def get_categories_stats(connection):
+    with connection.cursor() as cursor:
+        cursor.execute("""
+            SELECT
+                recipes_category.id, 
+                recipes_category.name, 
+                COUNT(*), 
+                SUM(likes) 
+            FROM recipes_recipe 
+            INNER JOIN recipes_category 
+            ON recipes_recipe.category_id = recipes_category.id 
+            GROUP BY category_id
+        """)
