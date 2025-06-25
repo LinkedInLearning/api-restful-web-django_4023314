@@ -2,9 +2,10 @@ from django.db import connection
 from django.shortcuts import render
 
 from rest_framework.decorators import action
-from rest_framework import viewsets, response, generics, filters
+from rest_framework import viewsets, response, generics, filters, permissions
 from django_filters.rest_framework import DjangoFilterBackend
 
+from .permissions import IsAdminOrReadOnly, UnlockedRecipe, UnlockedIngredient
 from .models import Category, Recipe, Ingredient
 from .serializers import CategorySerializer, CategoryInfoSerializer, IngredientFullSerializer, IngredientUrlSerializer, RecipeListSerializer, RecipeDetailSerializer
 
@@ -18,6 +19,7 @@ class CategoryViewSet(viewsets.ModelViewSet):
     template_name = 'categories.html'
     ordering_fields = ['order']
     search_fields = ['name']
+    permission_classes = [IsAdminOrReadOnly]
 
 
 class RecipeViewSet(viewsets.ModelViewSet):
@@ -34,6 +36,7 @@ class RecipeViewSet(viewsets.ModelViewSet):
     }    
     search_fields = ['title', 'description', 'instructions', 'category__name']
     ordering_fields = ['title', 'published', 'likes']
+    permission_classes = [IsAdminOrReadOnly | UnlockedRecipe]
     
     def get_queryset(self):
         queryset = super().get_queryset()
@@ -44,7 +47,7 @@ class RecipeViewSet(viewsets.ModelViewSet):
     def get_serializer_class(self):
         return RecipeListSerializer if self.action == 'list' else RecipeDetailSerializer
 
-    @action(detail=True, methods=['get', 'post'])
+    @action(detail=True, methods=['get', 'post'], permission_classes=[IsAdminOrReadOnly | UnlockedRecipe])
     def ingredients(self, request, pk=None):
         if request.method == 'POST':
             recipe = self.get_object()
@@ -66,11 +69,13 @@ class RecipeViewSet(viewsets.ModelViewSet):
 class IngredientView(generics.RetrieveUpdateDestroyAPIView):
     queryset = Ingredient.objects.all()
     serializer_class = IngredientFullSerializer
+    permission_classes = [IsAdminOrReadOnly | UnlockedIngredient]
 
 
 class CategoryRecipesView(generics.ListAPIView):
     serializer_class = RecipeListSerializer
     template_name = 'recipes.html'
+    permission_classes = []
 
     def get_queryset(self):
         return Recipe.objects.filter(
@@ -79,6 +84,8 @@ class CategoryRecipesView(generics.ListAPIView):
 
 
 class CategoryInfoViewSet(viewsets.ViewSet):
+    permission_classes = []
+
     def list(self, request):
         with connection.cursor() as cursor:
             cursor.execute("""
