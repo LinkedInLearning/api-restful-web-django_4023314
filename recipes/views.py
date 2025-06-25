@@ -2,7 +2,7 @@ from django.db import connection
 from django.shortcuts import render
 
 from rest_framework.decorators import action
-from rest_framework import viewsets, response, generics, filters, permissions
+from rest_framework import viewsets, response, generics, filters
 from django_filters.rest_framework import DjangoFilterBackend
 
 from .permissions import IsAdminOrReadOnly, UnlockedRecipe, UnlockedIngredient
