@@ -2,7 +2,7 @@ from django.db import connection
 from django.shortcuts import render
 
 from rest_framework.decorators import action
-from rest_framework import viewsets, response, generics, filters
+from rest_framework import viewsets, response, generics, filters, throttling
 from django_filters.rest_framework import DjangoFilterBackend
 
 from .permissions import IsAdminOrReadOnly, UnlockedRecipe, UnlockedIngredient
@@ -37,6 +37,7 @@ class RecipeViewSet(viewsets.ModelViewSet):
     search_fields = ['title', 'description', 'instructions', 'category__name']
     ordering_fields = ['title', 'published', 'likes']
     permission_classes = [IsAdminOrReadOnly | UnlockedRecipe]
+    throttle_classes = [throttling.UserRateThrottle, throttling.AnonRateThrottle]
     
     def get_queryset(self):
         queryset = super().get_queryset()
@@ -76,6 +77,8 @@ class CategoryRecipesView(generics.ListAPIView):
     serializer_class = RecipeListSerializer
     template_name = 'recipes.html'
     permission_classes = []
+    throttle_classes = [throttling.UserRateThrottle,
+                        throttling.AnonRateThrottle]
 
     def get_queryset(self):
         return Recipe.objects.filter(
@@ -85,6 +88,7 @@ class CategoryRecipesView(generics.ListAPIView):
 
 class CategoryInfoViewSet(viewsets.ViewSet):
     permission_classes = []
+    throttle_scope = 'info'
 
     def list(self, request):
         with connection.cursor() as cursor:
