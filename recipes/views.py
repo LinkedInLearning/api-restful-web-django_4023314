@@ -1,10 +1,11 @@
 from django.db import connection
 from django.shortcuts import render
 
-from rest_framework.decorators import action
+from rest_framework.decorators import action, api_view, permission_classes, throttle_classes
 from rest_framework import viewsets, response, generics, filters, throttling
 from django_filters.rest_framework import DjangoFilterBackend
 
+from .throttling import InfoRateThrottle
 from .permissions import IsAdminOrReadOnly, UnlockedRecipe, UnlockedIngredient
 from .models import Category, Recipe, Ingredient
 from .serializers import CategorySerializer, CategoryInfoSerializer, IngredientFullSerializer, IngredientUrlSerializer, RecipeListSerializer, RecipeDetailSerializer
@@ -86,23 +87,22 @@ class CategoryRecipesView(generics.ListAPIView):
         ).order_by('-published')
 
 
-class CategoryInfoViewSet(viewsets.ViewSet):
-    permission_classes = []
-    throttle_scope = 'info'
-
-    def list(self, request):
-        with connection.cursor() as cursor:
-            cursor.execute("""
-                SELECT
-                    recipes_category.id, 
-                    recipes_category.name, 
-                    COUNT(*), 
-                    SUM(likes) 
-                FROM recipes_recipe 
-                INNER JOIN recipes_category 
-                ON recipes_recipe.category_id = recipes_category.id 
-                GROUP BY category_id
-            """)
-            return response.Response(
-                CategoryInfoSerializer(cursor.fetchall(), many=True).data
-            )
+@api_view(['GET'])
+@permission_classes([])
+@throttle_classes([InfoRateThrottle])
+def category_info(request):
+    with connection.cursor() as cursor:
+        cursor.execute("""
+            SELECT
+                recipes_category.id, 
+                recipes_category.name, 
+                COUNT(*), 
+                SUM(likes) 
+            FROM recipes_recipe 
+            INNER JOIN recipes_category 
+            ON recipes_recipe.category_id = recipes_category.id 
+            GROUP BY category_id
+        """)
+        return response.Response(
+            CategoryInfoSerializer(cursor.fetchall(), many=True).data
+        )
