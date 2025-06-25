@@ -134,7 +134,6 @@ REST_FRAMEWORK = {
         "rest_framework.renderers.BrowsableAPIRenderer",
         "gourmand.renderers.TemplateHTMLFragmentRenderer",
     ),
-    # "DEFAULT_PAGINATION_CLASS": "rest_framework.pagination.PagePagination",
     "DEFAULT_PAGINATION_CLASS": "rest_framework.pagination.LimitOffsetPagination",
     "PAGE_SIZE": 10,
     "DEFAULT_FILTER_BACKENDS": [
@@ -142,6 +141,7 @@ REST_FRAMEWORK = {
         "rest_framework.filters.SearchFilter",
         "rest_framework.filters.OrderingFilter",
     ],
+    # Accès : admin / aaBBcc01
 }
 
 # Default primary key field type
