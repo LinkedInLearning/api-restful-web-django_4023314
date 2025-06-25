@@ -6,15 +6,24 @@ from rest_framework.test import APITestCase
 from recipes.models import Category
 from rest_framework.test import APITestCase
 
+from django.test.utils import override_settings
+
+TEST_CACHE_SETTINGS = {
+    'default': {
+        'BACKEND': 'django.core.cache.backends.dummy.DummyCache',
+    }
+}
 
 class CategoryViewSetTestCase(APITestCase):
-  
+
+  @override_settings(CACHES=TEST_CACHE_SETTINGS)
   def test_empty_list(self):
     response = self.client.get('/v1/categories/')
 
     self.assertEqual(response.status_code, 200)
     self.assertEqual(len(response.data['results']), 0)
 
+  @override_settings(CACHES=TEST_CACHE_SETTINGS)
   def test_list_ordered_categories(self): 
     Category.objects.create(name = 'DEUX' , order = 2)
     Category.objects.create(name = 'UN'   , order = 1)
