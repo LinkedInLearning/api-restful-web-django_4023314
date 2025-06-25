@@ -1,11 +1,12 @@
 from django.db import connection
-from django.shortcuts import render
 from django.utils.decorators import method_decorator
 from django.views.decorators.cache import cache_page
 
 from rest_framework.decorators import action, api_view, permission_classes, throttle_classes
 from rest_framework import viewsets, response, generics, filters, throttling
+
 from django_filters.rest_framework import DjangoFilterBackend
+from drf_spectacular.utils import extend_schema
 
 from .throttling import InfoRateThrottle
 from .permissions import IsAdminOrReadOnly, UnlockedRecipe, UnlockedIngredient
@@ -55,7 +56,23 @@ class RecipeViewSet(viewsets.ModelViewSet):
     def get_serializer_class(self):
         return RecipeListSerializer if self.action == 'list' else RecipeDetailSerializer
 
-    @action(detail=True, methods=['get', 'post'], permission_classes=[IsAdminOrReadOnly | UnlockedRecipe])
+    @extend_schema(
+        methods=['GET'],
+        summary='List ingredients for a recipe',
+        responses={200: IngredientUrlSerializer(many=True)}
+    )
+    @extend_schema(
+        methods=['POST'],
+        summary='Add an ingredient to a recipe',
+        request=IngredientUrlSerializer(),
+        responses={201: IngredientUrlSerializer(many=False)}
+    )
+    @action(
+        detail=True, 
+        methods=['GET', 'POST'], 
+        permission_classes=[IsAdminOrReadOnly | UnlockedRecipe], 
+        pagination_class=None
+    )
     def ingredients(self, request, pk=None):
         if request.method == 'POST':
             recipe = self.get_object()

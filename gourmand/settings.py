@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     "rest_framework_simplejwt",
     "django_filters",
     "recipes",
+    "drf_spectacular",
 ]
 
 MIDDLEWARE = [
@@ -160,6 +161,18 @@ REST_FRAMEWORK = {
         "user": "1000/hour",
         "info": "10/minute",
     },
+    'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
+}
+
+SPECTACULAR_SETTINGS = {
+    'TITLE': 'Recipe API',
+    'DESCRIPTION': 'API for managing recipes and categories',
+    'VERSION': '1.0.0',
+    'SERVE_INCLUDE_SCHEMA': False,
+    'RENDERER_WHITELIST': [ 
+        'rest_framework.renderers.JSONRenderer',
+        'gourmand.renderers.TemplateHTMLFragmentRenderer',
+    ],
 }
 
 SIMPLE_JWT = {
