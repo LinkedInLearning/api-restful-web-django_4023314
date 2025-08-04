@@ -6,7 +6,7 @@ Ce dossier Repository est lié au cours `Faire une API RESTful web en Django`. L
 
 Ce cours est intégré à GitHub Codespaces, un environnement de développement instantané « dans le nuage » qui offre toutes les fonctionnalités de votre IDE préféré sans nécessiter de configuration sur une machine locale. Avec Codespaces, vous pouvez vous exercer à partir de n'importe quelle machine, à tout moment, tout en utilisant un outil que vous êtes susceptible de rencontrer sur votre lieu de travail. Consultez la vidéo "Utiliser Codespaces sur GitHub" pour savoir comment démarrer.    
 
-DESCRIPTION DE LA FORMATION
+Avec Sylvain Labasse, apprenez à concevoir une API REST complète et sécurisée grâce au framework Django REST. Après une révision des prérequis et la mise en place de l’environnement de développement, vous découvrirez comment structurer vos endpoints, sérialiser vos modèles, gérer les permissions et l’authentification, paginer les résultats ou encore filtrer et trier les données. Le cours couvre également la documentation, les tests automatisés, le cache et la sécurisation des accès. Une approche progressive pour maîtriser les fondations d’un back-end Python moderne, prêt pour le web et le mobile.
 
 ## Instructions
 
