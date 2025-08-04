@@ -49,7 +49,7 @@ Afin de résoudre ce problème :
  Retrouvez mes autres formations sur [LinkedIn Learning][lil-URL-trainer].
 
 [0]: # (Replace these placeholder URLs with actual course URLs)
-[lil-course-url]: https://www.linkedin.com
+[lil-course-url]: https://www.linkedin.com/learning/faire-une-api-restful-web-en-django
 [lil-thumbnail-url]: https://media.licdn.com/dms/image/v2/D4E0DAQHcJ7cAyN1kQA/learning-public-crop_675_1200/B4EZh05QvfHEAY-/0/1754307825388?e=2147483647&v=beta&t=Y9pZ9TFWmhBK-5VbFpUUissG887u1PmsvMv8ur4Von0
 [lil-URL-trainer]: https://www.linkedin.com/learning/instructors/sylvain-labasse
 
